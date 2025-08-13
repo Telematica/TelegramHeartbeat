@@ -12,32 +12,42 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class Networking {
-    private static final String ETHERNET_WIFI_INTERFACE = "en0";
+    private static final String ETHERNET_WIFI_INTERFACE = "en1";
+    private static final String PRIVATE_IP_RANGE_START = "192";
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public static void listLocalNetworkInterfaces(Optional<Boolean> displayAllInterfaces) throws SocketException {
-        Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
-        while (e.hasMoreElements()) {
-            NetworkInterface n = e.nextElement();
+    public static String listLocalNetworkInterfaces(Optional<Boolean> displayAllInterfaces) throws SocketException {
+        StringBuilder interfaces = new StringBuilder();
+        Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+        while (networkInterfaces.hasMoreElements()) {
+            NetworkInterface networkInterface = networkInterfaces.nextElement();
             if (
-                    !Objects.equals(n.getName(), Networking.ETHERNET_WIFI_INTERFACE) &&
+                    !Objects.equals(networkInterface.getName(), Networking.ETHERNET_WIFI_INTERFACE) &&
                             (!displayAllInterfaces.isPresent() || displayAllInterfaces.get().equals(Boolean.FALSE))
             ) {
                 continue;
             }
-            Enumeration<InetAddress> ee = n.getInetAddresses();
-            while (ee.hasMoreElements()) {
-                InetAddress i = ee.nextElement();
-                System.out.println("Interface name: " + n.getName() + ", Address: " + i.getHostAddress());
+            Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+            while (addresses.hasMoreElements()) {
+                InetAddress address = addresses.nextElement();
+                if (address.getHostAddress().startsWith(PRIVATE_IP_RANGE_START)) {
+                    interfaces
+                            .append("Interface name: ")
+                            .append(networkInterface.getName())
+                            .append(", Address: ")
+                            .append(address.getHostAddress())
+                            .append("\n");
+                }
             }
         }
+        return interfaces.toString();
     }
 
     public static String getPublicIP() throws IOException {
         String serviceURL = "http://checkip.amazonaws.com";
-        URL checkIPAWS = new URL(serviceURL);
+        URL checkIpAws = new URL(serviceURL);
         BufferedReader in = new BufferedReader(
-                new InputStreamReader(checkIPAWS.openStream())
+                new InputStreamReader(checkIpAws.openStream())
         );
         return in.readLine();
     }
