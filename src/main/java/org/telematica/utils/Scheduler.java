@@ -36,13 +36,13 @@ public class Scheduler {
         while (true) {
             try {
                 String message =
+                        "Alive Date: " + new Date() + "\n" + "\n" +
                         "Public IP: " + Networking.getPublicIP() + "\n" + "\n" +
                         Networking.listLocalNetworkInterfaces(Optional.of(false)) + "\n" +
-                        "Alive Date: " + new Date() + "\n" + "\n" +
                         "PID: " + Management.PID;
                 System.out.println(message);
                 TelegramEditMessageText.send(
-                        System.getenv().getOrDefault("JAVA_TELEGRAM_TELEMATICA_ID", ""),
+                        System.getenv().getOrDefault("JAVA_TELEGRAM_USER_ID", ""),
                         System.getenv().getOrDefault("JAVA_TELEGRAM_MESSAGE_ID", ""),
                         message,
                         false
