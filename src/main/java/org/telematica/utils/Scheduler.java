@@ -33,20 +33,19 @@ public class Scheduler {
 
     @SuppressWarnings("InfiniteLoopStatement")
     public static void startNotificatorLoop() {
+        String message = "";
+        String userId = System.getenv().getOrDefault("JAVA_TELEGRAM_USER_ID", "");
+        String messageId = System.getenv().getOrDefault("JAVA_TELEGRAM_MESSAGE_ID", "");
         while (true) {
             try {
-                String message =
+                message =
                         "Alive Date: " + new Date() + "\n" + "\n" +
                         "Public IP: " + Networking.getPublicIP() + "\n" + "\n" +
                         Networking.listLocalNetworkInterfaces(Optional.of(false)) + "\n" +
                         "PID: " + Management.PID;
                 System.out.println(message);
-                TelegramEditMessageText.send(
-                        System.getenv().getOrDefault("JAVA_TELEGRAM_USER_ID", ""),
-                        System.getenv().getOrDefault("JAVA_TELEGRAM_MESSAGE_ID", ""),
-                        message,
-                        false
-                );
+                TelegramEditMessageText.send(userId, messageId, message,false);
+                System.gc();
                 sleep(PERIOD);
             } catch (InterruptedException | IOException e) {
                 throw new RuntimeException(e);

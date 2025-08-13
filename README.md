@@ -4,6 +4,7 @@ Telegram based HeartBeat Utility
 
 ## Reference links:
 - https://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+- https://support.apple.com/en-us/101992
 
 ## Todos:
 - Add Network Interfaces as console parameter
