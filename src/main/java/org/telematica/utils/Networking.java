@@ -49,6 +49,8 @@ public class Networking {
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(checkIpAws.openStream())
         );
-        return in.readLine();
+        String output = in.readLine();
+        in.close();
+        return output;
     }
 }

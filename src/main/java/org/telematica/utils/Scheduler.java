@@ -1,5 +1,6 @@
 package org.telematica.utils;
 
+import org.telematica.Main;
 import org.telematica.requests.TelegramEditMessageText;
 
 import java.io.IOException;
@@ -36,15 +37,18 @@ public class Scheduler {
         String message = "";
         String userId = System.getenv().getOrDefault("JAVA_TELEGRAM_USER_ID", "");
         String messageId = System.getenv().getOrDefault("JAVA_TELEGRAM_MESSAGE_ID", "");
+        long processId = Management.PID;
         while (true) {
             try {
                 message =
                         "Alive Date: " + new Date() + "\n" + "\n" +
                         "Public IP: " + Networking.getPublicIP() + "\n" + "\n" +
                         Networking.listLocalNetworkInterfaces(Optional.of(false)) + "\n" +
-                        "PID: " + Management.PID;
-                System.out.println(message);
-                TelegramEditMessageText.send(userId, messageId, message,false);
+                        "PID: " + processId;
+                if (!Main.quiet) {
+                    System.out.println(message);
+                }
+                TelegramEditMessageText.send(userId, messageId, message);
                 System.gc();
                 sleep(PERIOD);
             } catch (InterruptedException | IOException e) {
