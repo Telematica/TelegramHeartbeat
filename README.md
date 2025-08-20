@@ -31,6 +31,7 @@ export JAVA_TELEGRAM_USER_ID={CHAT ID FROM USER, GROUP OR CHANNEL}
 export JAVA_TELEGRAM_MESSAGE_ID={SEQUENCE ID FROM THE CHAT}
 export JAVA_TELEGRAM_API_URL="https://api.telegram.org/bot";
 export JAVA_LOG_PATH={LOG DIRECTORY}
+export JAVA_BIN={JAVA VIRTUAL MACHINE BINARY}
 ```
 
 4) Use scripts/cron.sh to deploy on server.

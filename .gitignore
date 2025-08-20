@@ -39,3 +39,4 @@ build/
 
 ### Env ###
 scripts/envvars.sh
+scripts/*.bak
