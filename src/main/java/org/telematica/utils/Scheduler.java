@@ -18,10 +18,10 @@ public class Scheduler {
     private static final StringBuilder messageBuilder = new StringBuilder(512);
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final Runtime runtime = Runtime.getRuntime();
-    
+
     // Memory monitoring
     private static long lastMemoryLog = 0;
-    private static final long MEMORY_LOG_INTERVAL = 10 * 60 * 1000; // Log memory every 10 minutes
+    private static final long MEMORY_LOG_INTERVAL = 2 * 60 * 1000; // Log memory every 2 minutes
 
     public static void startNotificatorTimer() {
         Timer timer = new Timer();
@@ -55,6 +55,9 @@ public class Scheduler {
         
         while (true) {
             try {
+                // Log memory usage periodically instead of every iteration
+                long currentTime = System.currentTimeMillis();
+
                 // Clear and reuse StringBuilder instead of creating new strings
                 messageBuilder.setLength(0);
                 
@@ -68,23 +71,22 @@ public class Scheduler {
                            .append(Networking.listLocalNetworkInterfaces(Optional.of(false)))
                            .append(newLine)
                            .append(pidPrefix)
-                           .append(processId);
+                           .append(processId)
+                           .append(newLine).append(newLine)
+                           .append((currentTime - lastMemoryLog > MEMORY_LOG_INTERVAL) ? logMemoryUsage() : "");
                 
                 String message = messageBuilder.toString();
                 
                 if (!Main.quiet) {
                     System.out.println(message);
                 }
-                
-                TelegramEditMessageText.send(userId, messageId, message);
-                
-                // Log memory usage periodically instead of every iteration
-                long currentTime = System.currentTimeMillis();
+
                 if (currentTime - lastMemoryLog > MEMORY_LOG_INTERVAL) {
-                    logMemoryUsage();
                     lastMemoryLog = currentTime;
                 }
                 
+                TelegramEditMessageText.send(userId, messageId, message);
+
                 // Remove manual GC call - let JVM handle it automatically
                 sleep(PERIOD);
             } catch (InterruptedException | IOException e) {
@@ -96,18 +98,18 @@ public class Scheduler {
     /**
      * Logs current memory usage for monitoring purposes
      */
-    private static void logMemoryUsage() {
+    private static String logMemoryUsage() {
         long totalMemory = runtime.totalMemory();
         long freeMemory = runtime.freeMemory();
         long usedMemory = totalMemory - freeMemory;
         long maxMemory = runtime.maxMemory();
-        
-        if (!Main.quiet) {
-            System.out.printf("Memory Usage - Used: %d MB, Free: %d MB, Total: %d MB, Max: %d MB%n",
+
+        return String.format(
+                "Memory Usage \nUsed: %d MB \nFree: %d MB \nTotal: %d MB \nMax: %d MB%n",
                 usedMemory / (1024 * 1024),
                 freeMemory / (1024 * 1024),
                 totalMemory / (1024 * 1024),
-                maxMemory / (1024 * 1024));
-        }
+                maxMemory / (1024 * 1024)
+        );
     }
 }

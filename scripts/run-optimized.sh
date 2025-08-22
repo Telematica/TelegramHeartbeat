@@ -35,7 +35,7 @@ JVM_OPTS="$JVM_OPTS $MEMORY_OPTS $PERF_OPTS"
 JVM_OPTS="$JVM_OPTS $GC_LOGGING"
 
 # Check if JAR file exists
-JAR_FILE="target/telegram-heartbeat-1.0-SNAPSHOT-jar-with-dependencies.jar"
+JAR_FILE="$HOME/TelegramHeartbeat/target/telegram-heartbeat-1.0-SNAPSHOT-jar-with-dependencies.jar"
 if [ ! -f "$JAR_FILE" ]; then
     echo "Building application..."
     mvn clean package
