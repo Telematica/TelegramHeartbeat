@@ -22,6 +22,7 @@ if ps -p $PID_HEARTBEAT > /dev/null
         echo "$PID_HEARTBEAT is running, skipping."
         return 1;
     else
+        source $ENV_VAR_FILE_PATH
         runjar
         writepidtoenvfile
         echo "PID created: $PID_HEARTBEAT, starting new JAR app instance."
