@@ -3,7 +3,7 @@
 export ENV_VAR_FILE_PATH=$HOME/TelegramHeartBeat/scripts/envvars.sh
 
 function writepidtoenvfile {
-    sed -i.bak -E "s/PID=[0-9]+/PID=$PID_HEARTBEAT/" $ENV_VAR_FILE_PATH
+    sed -i.bak -E "s/PID_HEARTBEAT=[0-9]+/PID_HEARTBEAT=$PID_HEARTBEAT/" $ENV_VAR_FILE_PATH
 }
 
 function runjar {
@@ -22,7 +22,6 @@ if ps -p $PID_HEARTBEAT > /dev/null
         echo "$PID_HEARTBEAT is running, skipping."
         return 1;
     else
-        source $ENV_VAR_FILE_PATH
         runjar
         writepidtoenvfile
         echo "PID created: $PID_HEARTBEAT, starting new JAR app instance."
