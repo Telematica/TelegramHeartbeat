@@ -26,6 +26,9 @@ Telegram based HeartBeat Utility
 
 3) 3)Create envvars.sh file into `scripts` folder and add the fields:
 ```bash
+#!/bin/zsh
+export PID_HEARTBEAT=0 # This is automagically updated for concurrency purposes
+
 export JAVA_TELEGRAM_API_KEY={TELEGRAM BOT API KEY}
 export JAVA_TELEGRAM_USER_ID={CHAT ID FROM USER, GROUP OR CHANNEL}
 export JAVA_TELEGRAM_MESSAGE_ID={SEQUENCE ID FROM THE CHAT}
